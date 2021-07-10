@@ -21,40 +21,51 @@ const payload = { "method": "eth_blockNumber", "params": [], "id": 137, "jsonrpc
 
 console.log("hello")
 
-var getMainNetHealths = async function (){
+var getMainNetHealths = async function () {
 
   var table_html = '<tr><th>RPC url </th> <th>Block Number</th>';
-  
+
   for (let i = 0; i < rpcsMainNet.length; i++) {
     table_html += '<tr>';
     let response = await axios.post(rpcsMainNet[i], payload)
-    let num = parseInt(response.data.result, 16) 
-    console.log(response.config.url,num)
+    let num = parseInt(response.data.result, 16)
+    console.log(response.config.url, num)
     table_html += '<td>' + response.config.url + '</td>'
     table_html += '<td>' + +num + '</td>'
     table_html += '</tr>'
   }
-  
+
   document.getElementById("healths").innerHTML = table_html
 }
 
-var getTestNetHealths = async function (){
+var getTestNetHealths = async function () {
 
   var table_html = '<tr><th>RPC url </th> <th>Block Number</th>';
-  
+
   for (let i = 0; i < rpcsTestNet.length; i++) {
     table_html += '<tr>';
     let response = await axios.post(rpcsTestNet[i], payload)
-    let num = parseInt(response.data.result, 16) 
-    console.log(response.config.url,num)
+    let num = parseInt(response.data.result, 16)
+    console.log(response.config.url, num)
     table_html += '<td>' + response.config.url + '</td>'
     table_html += '<td>' + +num + '</td>'
     table_html += '</tr>'
   }
-  
+
   document.getElementById("testnet-healths").innerHTML = table_html
 }
 
-getMainNetHealths();
 
-getTestNetHealths();
+
+function refresh() {
+
+  getMainNetHealths();
+  getTestNetHealths();
+
+
+  // make Ajax call here, inside the callback call:
+  setTimeout(refresh, 5000);
+}
+
+// initial call, or just call refresh directly
+refresh()
